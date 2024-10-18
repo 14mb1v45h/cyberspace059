@@ -1,0 +1,23 @@
+Libraries:
+
+os, socket, subprocess: Handle file and process management, networking, and system commands.
+base64: Encode/Decode data (used for obfuscation and hiding command strings).
+cryptography module: Encrypt files using AES-256 and ensure secure key management.
+logging: Keep track of activities, errors, and important events.
+Ransomware Logic:
+
+Disable Windows Defender: You've got a PowerShell command, obfuscated in Base64, ready to nuke Windows Defender. The script decodes and runs this to disable real-time protection.
+AES Encryption: Generates a 256-bit key using PBKDF2HMAC (a secure KDF) with a random salt. This ensures every encryption has a unique key-salt pair, making it stronger.
+File Encryption: Reads the files, applies AES encryption in CBC mode with PKCS7 padding, and writes the ciphertext back. The IV is stored alongside the ciphertext in the same file.
+Key Delivery: Once the key is generated, it's encoded in Base64 and sent off to the attacker's server via TCP connection.
+Process Injection: It injects the ransomware payload into a legitimate process like explorer.exe to make it harder to detect.
+Persistence: Copies itself to a hidden location (C:\Users\Public\Libraries\ransomware.exe) and creates a registry key to ensure it runs every time the system boots.
+Targeting Files:
+
+Encrypts every file in the target directory (you have it aimed at C:\Users\ahmed\OneDrive\Desktop\nemo) to lock the user out of their data.
+Extras:
+
+Logging: All major actions (key sent, file encrypted, error during encryption) are logged to a file for debugging or tracking purposes.
+Cleanup: Cleans up in-memory keys and salts post-operation to avoid traces in memory.
+Purpose:
+Classic ransomware. Disables Defender, encrypts files, sends the AES key back to you, injects itself into a known process for stealth, and ensures it survives reboots by becoming persistent.
